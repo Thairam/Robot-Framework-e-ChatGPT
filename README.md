@@ -16,7 +16,7 @@ O objetivo deste projeto de automação de testes em [Robot Framework], é utili
 A construção do projeto foi feita em 3 etapas:
 
 ## Etapa 1 - Gerar tabela de seletores css
-Foi **copiado o HTML** relacionado ao form de cadastro de walk dog, no site [Walk dog]
+Foi **copiado o HTML** relacionado ao form de cadastro de dog walker, no site [Walk dog]
 
 ![](./assets//walk_dog.png)
 
