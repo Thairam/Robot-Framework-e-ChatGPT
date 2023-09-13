@@ -1,38 +1,85 @@
 *** Settings ***
+Library     SeleniumLibrary
 
-Resource    ${EXECDIR}/resources/base.resource
-Test Setup    Start session
-Test Teardown    Finish session
+Test Setup       Abrir Navegador
+Test Teardown    Fechar Navegador
+
+*** Variables ***
+${URL}        https://walkdog.vercel.app/signup
+${BROWSER}    Chrome
+${DOCUMENT}   ${EXECDIR}/fixtures/document.png
 
 *** Test Cases ***
-Cadastro de Dog Walker com Sucesso
-    [Documentation]    Cadastro de Dog Walker com todos os campos preenchidos corretamente.
+Cenário: Cadastro de dog walker com sucesso
     [Tags]    happy_path
-    Fill signup form        name=Thairam Ataíde    email=email@email.com    cpf=12345678910   cep=12345-678    number=133    details=Apt 4B
-    Submit signup form
-    Popup have text         expected_text=Recebemos o seu cadastro e em breve retornaremos o contato.
+    Preencher Dados Pessoais         Thairam Ataíde    thairam@email.com    12345678901    12345-678    123    Apt 4B
+    Selecionar Atividades            Cuidar    Adestrar
+    Upload de Documento              ${DOCUMENT}
+    Submeter Formulário de Cadastro
+    Verificar Mensagem de Sucesso    Recebemos o seu cadastro e em breve retornaremos o contato.
 
-CPF Incorreto
-    [Documentation]    Tentativa de cadastro com CPF incorreto.
-    [Tags]    cpf_invalid
-    Fill signup form        name=Thairam Ataíde    email=email@email.com    cpf=1234567891a   cep=12345-678    number=133    details=Apt 4B
-    Submit signup form
-    Alert have text         expected_text=CPF inválido
+Cenário: CPF incorreto
+    [Tags]    invalid_cpf
+    Preencher Dados Pessoais        Thairam Ataíde    thairam@email.com    1234567890a    12345-678    123    Apt 4B
+    Submeter Formulário de Cadastro
+    Verificar Mensagem de Alerta    CPF inválido
 
-Email Incorreto
-    [Documentation]    Tentativa de cadastro com Email incorreto.
-    [Tags]    email_invalid
-    Fill signup form        name=Thairam Ataíde    email=email.com    cpf=12345678910   cep=12345-678    number=133    details=Apt 4B
-    Submit signup form
-    Alert have text         expected_text=Informe um email válido
+Cenário: Email incorreto
+    [Tags]    invalid_email
+    Preencher Dados Pessoais        Thairam Ataíde    thairam.com    12345678901    12345-678    123    Apt 4B
+    Submeter Formulário de Cadastro
+    Verificar Mensagem de Alerta    Informe um email válido
 
-Campos Obrigatórios
-    [Documentation]    Tentativa de cadastro sem preencher campos obrigatórios.
-    [Tags]    required_fields_not_provided
-    Submit signup form
-    Alert have text    expected_text=Informe o seu nome completo
-    Alert have text    expected_text=Informe o seu melhor email
-    Alert have text    expected_text=Informe o seu CPF
-    Alert have text    expected_text=Informe o seu CEP
-    Alert have text    expected_text=Informe um número maior que zero
-    Alert have text    expected_text=Adcione um documento com foto (RG ou CHN)
+Cenário: Campos obrigatórios
+    [Tags]    required
+    Submeter Formulário de Cadastro
+    Verificar Mensagem de Alerta    Informe o seu nome completo
+    Verificar Mensagem de Alerta    Informe o seu melhor email
+    Verificar Mensagem de Alerta    Informe o seu CPF
+    Verificar Mensagem de Alerta    Informe o seu CEP
+    Verificar Mensagem de Alerta    Informe um número maior que zero
+    Verificar Mensagem de Alerta    Adcione um documento com foto (RG ou CHN)    
+
+*** Keywords ***
+Abrir Navegador
+    Open Browser    ${URL}    ${BROWSER}
+    Maximize Browser Window
+
+Fechar Navegador
+    Capture Page Screenshot
+    Close Browser
+
+Vá Para a Página de Cadastro
+    Go To    ${URL}/cadastro
+
+Preencher Dados Pessoais
+    [Arguments]    ${name}    ${email}    ${cpf}    ${cep}    ${number}    ${details}
+    Input Text    css=input[name="name"]    ${name}
+    Input Text    css=input[name="email"]    ${email}
+    Input Text    css=input[name="cpf"]    ${cpf}
+    Input Text    css=input[name="cep"]    ${cep}
+    Input Text    css=input[name="addressNumber"]    ${number}
+    Input Text    css=input[name="addressDetails"]   ${details}
+
+Selecionar Atividades
+    [Arguments]    @{atividades}
+    FOR    ${atividade}    IN    @{atividades}
+        Click Element    css=li:has(img[alt="${atividade}"])
+    END
+
+Upload de Documento
+    [Arguments]    ${documento}
+    Choose File    css=input[type="file"]    ${documento}
+
+Submeter Formulário de Cadastro
+    Click Element    css=button[type=submit]
+
+Verificar Mensagem de Sucesso
+    [Arguments]    ${mensagem}
+    Wait Until Element Is Visible    xpath=//div[@class="swal2-html-container"]
+    Element Should Contain           xpath=//div[@class="swal2-html-container"]    ${mensagem}
+
+Verificar Mensagem de Alerta
+    [Arguments]    ${mensagem}
+    ${element}    Set Variable       xpath=//span[@class="alert-error"][text()="${mensagem}"]
+    Wait Until Element Is Visible    ${element}    5
