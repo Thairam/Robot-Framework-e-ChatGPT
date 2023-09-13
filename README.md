@@ -57,8 +57,21 @@ No arquivo [cadastro.robot](./cadastro.robot) temos os testes automatizados, com
 # Avaliação
 Podemos identificar que o ChatGPT é um aliado para automação de testes, e que tem potencial para nos auxiliar nesse processo, minimizando nossos esforços.
 
+# Executar os testes
+## Pré-requisitos
+- [Python] - v3.11.5
+- [Pip] - v23.2.1
+- [Robot Framework] - v6.1.1
+
+## Execute o comando
+```sh
+robot -d ./logs cadastro.robot
+```
+
 [Robot Framework]: https://robotframework.org/
 [ChatGPT]: https://chat.openai.com/
 [Walk dog]: https://walkdog.vercel.app/signup
 [AutomatizAi - Robot Framework e ChatGPT]: https://qaxperience.com/pt/meu-conteudo/curso/64dcd98cd6c17ce642520443/aula/64de9254d6c17ce64258a34d
 [Fernando Papito]: https://www.linkedin.com/in/papitoio/
+[Python]: https://www.python.org/
+[Pip]: https://pypi.org/project/pip/
