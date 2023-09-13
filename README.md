@@ -22,7 +22,7 @@ Foi **copiado o HTML** relacionado ao form de cadastro de dog walker, no site [W
 
 Este HTML foi utilizado para solicitar ao ChatGPT que gerasse uma tabela contendo os seletores dos principais campos distríbuidos na página.
 
-- No arquivo [request_1](./chatGPT/request1/input.md) podemos visualizar a solitiação feita ao ChatGPT.
+- No arquivo [request_1](./chatGPT/request1/input.md) podemos visualizar a solicitação feita ao ChatGPT (abra o arquivo no modo edição para melhor visualizar).
 - No arquivo [answer_1](./chatGPT/request1/answer.md) podemos visualizar a resposta obtida, contendo a tabela com os seletores.
 
 ## Etapa 2 - Gerar testes automatizados
